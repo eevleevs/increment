@@ -1,10 +1,18 @@
-# increment.nu
+# increment
 
-A Nushell script that **increments numbers** (dec, hex, bin, oct) and **toggles boolean-like values**, designed for Helix's `:pipe` command.
+Go binary for incrementing numbers (dec, hex, bin, oct) and toggling boolean-like values. Designed for Helix's `:pipe` command.
 
-Replaces `C-a`/`C-x` with a version that also handles `true`/`false`, `yes`/`no`, `on`/`off`, etc.
+Replaces `C-a`/`C-x` with a version that handles `true`/`false`, `yes`/`no`, `on`/`off`, etc.
 
 ---
+
+## Install
+
+```
+go install github.com/eevleevs/increment@latest
+```
+
+The binary will be installed to `$GOPATH/bin/increment.exe` (make sure that's on your `PATH`).
 
 ## How it works
 
@@ -26,44 +34,23 @@ The toggle logic: **odd amounts** (1, -1, 3, -5, ...) trigger toggling for non-n
 
 ---
 
-## Usage
-
-### Directly
-
-```nu
-echo "42" | nu --stdin increment.nu 1
-# → 43
-
-echo "0xFF" | nu --stdin increment.nu -1
-# → 0xFE
-
-echo "true" | nu --stdin increment.nu 1
-# → false
-```
-
-**Must use `--stdin`** — Nushell's `$in` does not read from OS-level stdin without it.
-
-### Helix
-
-Add to your `config.toml`:
+## Helix
 
 ```toml
 [keys.normal]
-C-a = "@miw:pipe use <PATH>/increment.nu; $in | increment run 1<ret>"
-C-x = "@miw:pipe use <PATH>/increment.nu; $in | increment run -1<ret>"
+C-a = '@miw:pipe ^increment 1<ret>'
+C-x = '@miw:pipe ^increment -1<ret>'
 ```
 
-Replace `<PATH>` with the absolute path to the repo (e.g. `C:/Users/giuli/git/increment`).
+The `^` prefix tells Nu to run `increment` as an external command, inheriting stdin from Helix. The macro `@miw` selects inner word, then `:` enters command mode, types the pipe command, and `<ret>` runs it.
 
-The macro `@miw` selects inner word, then `:` enters command mode, types the pipe command, and `<ret>` runs it.
+## Direct
 
-Your `shell` config must be:
-```toml
-[editor]
-shell = ["nu", "--stdin", "-c"]
 ```
-
-This makes Helix pass the pipe command as Nushell code (`nu --stdin -c "..."`), so `use` and `$in` work correctly.
+echo 42 | increment 1
+echo 0xFF | increment -1
+echo true | increment 1
+```
 
 ---
 
@@ -98,16 +85,8 @@ Each pair works in both directions and preserves case. All case variants of each
 
 ## Tests
 
-```nu
-nu test.nu
+```
+go test -v ./...
 ```
 
-Run from the repo directory (`cd ~/git/increment`).
-
-All 50+ test cases cover:
-- Decimal increment/decrement (including negatives and large numbers)
-- Hex, binary, octal with carry-over
-- All toggle pairs with both `+1` and `-1`
-- Even amounts leaving values unchanged
-- Unknown values passed through
-- Empty input
+Run from the repo directory.
