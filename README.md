@@ -47,9 +47,10 @@ The `^` prefix tells Nu to run `increment` as an external command, inheriting st
 ## Direct
 
 ```
-echo 42 | increment 1
-echo 0xFF | increment -1
-echo true | increment 1
+echo "1" | increment    # → 2  (default +1)
+echo "42" | increment 1 # → 43
+echo "0xFF" | increment -1 # → 0xFE
+echo "true" | increment 1 # → false
 ```
 
 ---
