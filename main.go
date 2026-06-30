@@ -120,13 +120,5 @@ func main() {
 	}
 
 	input := strings.TrimSpace(string(data))
-	result := Run(input, amount)
-	os.Stdout.WriteString(result)
-
-	if result == input {
-		if _, known := toggles[input]; !known {
-			fmt.Fprintln(os.Stderr, usage)
-			os.Exit(1)
-		}
-	}
+	os.Stdout.WriteString(Run(input, amount))
 }
