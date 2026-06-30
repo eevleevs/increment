@@ -16,6 +16,9 @@ var (
 	octRE = regexp.MustCompile(`^0o[0-7]+$`)
 )
 
+const usage = "usage: echo \"VALUE\" | increment [AMOUNT]\n" +
+	"  VALUE: number (42, 0xFF, 0b1010, 0o77) or toggle (true/false, yes/no, on/off, enable/disabled)"
+
 var toggles = map[string]string{
 	"true": "false", "false": "true",
 	"True": "False", "False": "True",
@@ -105,10 +108,25 @@ func main() {
 		}
 	}
 
+	fi, _ := os.Stdin.Stat()
+	if (fi.Mode() & os.ModeCharDevice) != 0 {
+		fmt.Fprintln(os.Stderr, usage)
+		os.Exit(1)
+	}
+
 	data, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		os.Exit(1)
 	}
 
-	os.Stdout.WriteString(Run(string(data), amount))
+	input := strings.TrimSpace(string(data))
+	result := Run(input, amount)
+	os.Stdout.WriteString(result)
+
+	if result == input {
+		if _, known := toggles[input]; !known {
+			fmt.Fprintln(os.Stderr, usage)
+			os.Exit(1)
+		}
+	}
 }
