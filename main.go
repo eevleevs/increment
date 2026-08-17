@@ -17,7 +17,7 @@ var (
 )
 
 const usage = "usage: echo \"VALUE\" | increment [AMOUNT]\n" +
-	"  VALUE: number (42, 0xFF, 0b1010, 0o77) or toggle (true/false, yes/no, on/off, enable/disabled)"
+	"  VALUE: number (42, 0xFF, 0b1010, 0o77) or toggle (true/false, yes/no, on/off, enabled/disabled)"
 
 var toggles = map[string]string{
 	"true": "false", "false": "true",
