@@ -42,7 +42,7 @@ C-a = '@miw:pipe ^increment 1<ret>'
 C-x = '@miw:pipe ^increment -1<ret>'
 ```
 
-The `^` prefix tells Nu to run `increment` as an external command, inheriting stdin from Helix. The macro `@miw` selects inner word, then `:` enters command mode, types the pipe command, and `<ret>` runs it.
+The `^` prefix tells the shell to run `increment` as an external command, inheriting stdin from Helix. The macro `@miw` selects inner word, then `:` enters command mode, types the pipe command, and `<ret>` runs it.
 
 ## Direct
 
